@@ -1,6 +1,11 @@
-cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)  # aggiornato da 3.0.2 a 3.10
 
 project(vostok LANGUAGES CXX)
+
+# Usa C++17 invece di C++0x
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find external dependencies
 find_package(OpenMP)
@@ -12,7 +17,8 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DNDEBUG -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -Wall")
 
-add_definitions( -std=c++0x -m64)
+# RIMOSSA la vecchia opzione obsoleta
+# add_definitions( -std=c++0x -m64 )
 
 # Define vostok executable ###################
 set(header_files
@@ -48,21 +54,19 @@ set(source_files
 
 add_executable(vostok
   ${source_files}
-  ${header_files} # Not required, but good for some IDEs
+  ${header_files}
 )
 
 if(OPENMP_FOUND)
-  set_target_properties(vostok PROPERTIES
-    COMPILE_OPTIONS ${OpenMP_CXX_FLAGS}
-    LINK_FLAGS ${OpenMP_CXX_FLAGS}
-  )
+  target_compile_options(vostok PRIVATE ${OpenMP_CXX_FLAGS})
+  target_link_libraries(vostok PRIVATE ${OpenMP_CXX_FLAGS})
 endif()
 ##############################################
 
 # Support installation
-# Choose installation on command line with "-DCMAKE_INSTALL_PREFIX=/some/path"
 include(GNUInstallDirs)
 
 install(TARGETS vostok
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
