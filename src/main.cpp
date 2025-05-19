@@ -8,13 +8,8 @@
 #include <sstream>
 #include <omp.h>
 
-#if __cplusplus < 201703L // If the version of C++ is less than 17
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
 #include <filesystem>
 namespace fs = std::filesystem;
-#endif
 
 #include "pointCloud/SimpleTextPointCloud.h"
 #include "IrradianceCalc.h"
